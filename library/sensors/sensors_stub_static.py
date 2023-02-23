@@ -27,6 +27,7 @@ import library.sensors.sensors as sensors
 # Define here global static values that will be applied to all sensors of the same type
 PERCENTAGE_SENSOR_VALUE = 50.0
 TEMPERATURE_SENSOR_VALUE = 67.3
+FPS_SENSOR_VALUE = 0
 
 # Define other sensors
 CPU_FREQ_MHZ = 2400.0
@@ -59,9 +60,9 @@ class Cpu(sensors.Cpu):
 
 class Gpu(sensors.Gpu):
     @staticmethod
-    def stats() -> Tuple[float, float, float, float]:  # load (%) / used mem (%) / used mem (Mb) / temp (°C)
+    def stats() -> Tuple[float, float, float, float, int]:  # load (%) / used mem (%) / used mem (Mb) / temp (°C) / FPS
         return PERCENTAGE_SENSOR_VALUE, PERCENTAGE_SENSOR_VALUE, \
-            GPU_MEM_TOTAL_SIZE_GB / 100 * PERCENTAGE_SENSOR_VALUE * 1000, TEMPERATURE_SENSOR_VALUE
+            GPU_MEM_TOTAL_SIZE_GB / 100 * PERCENTAGE_SENSOR_VALUE * 1000, TEMPERATURE_SENSOR_VALUE, FPS_SENSOR_VALUE
 
     @staticmethod
     def is_available() -> bool:

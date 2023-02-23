@@ -124,18 +124,12 @@ class Cpu(sensors.Cpu):
             if sensor.SensorType == Hardware.SensorType.Clock:
                 # Keep only real core clocks, ignore effective core clocks
                 if "Core #" in str(sensor.Name) and "Effective" not in str(sensor.Name):
-                    if sensor.Value:
-                        frequencies.append(float(sensor.Value))
-
-        if frequencies:
-            # Take mean of all core clock as "CPU clock" (as it is done in Windows Task Manager Performance tab)
-            return mean(frequencies)
-        else:
-            # Frequencies reading is not supported on this CPU
-            return math.nan
+                    frequencies.append(float(sensor.Value))
+        # Take mean of all core clock as "CPU clock"
+        return mean(frequencies)
 
     @staticmethod
-    def load() -> Tuple[float, float, float]:  # 1 / 5 / 15min avg (%):
+    def load() -> Tuple[float, float, float]:  # 1 / 5 / 15min avg:
         # Get this data from psutil because it is not available from LibreHardwareMonitor
         return psutil.getloadavg()
 
@@ -152,14 +146,15 @@ class Cpu(sensors.Cpu):
     @staticmethod
     def temperature() -> float:
         cpu = get_hw_and_update(Hardware.HardwareType.Cpu)
-        # By default, the average temperature of all CPU cores will be used
-        for sensor in cpu.Sensors:
-            if sensor.SensorType == Hardware.SensorType.Temperature and str(sensor.Name).startswith("Core Average"):
-                return float(sensor.Value)
-        # If not available, the max core temperature will be used
+        # By default, the max core temperature will be used
         for sensor in cpu.Sensors:
             if sensor.SensorType == Hardware.SensorType.Temperature and str(sensor.Name).startswith("Core Max"):
                 return float(sensor.Value)
+        # If not available, the average temperature of all CPU cores will be used
+        for sensor in cpu.Sensors:
+            if sensor.SensorType == Hardware.SensorType.Temperature and str(sensor.Name).startswith("Core Average"):
+                return float(sensor.Value)
+        
         # If not available, the CPU Package temperature (usually same as max core temperature) will be used
         for sensor in cpu.Sensors:
             if sensor.SensorType == Hardware.SensorType.Temperature and str(sensor.Name).startswith("CPU Package"):
@@ -174,7 +169,7 @@ class Cpu(sensors.Cpu):
 
 class Gpu(sensors.Gpu):
     @staticmethod
-    def stats() -> Tuple[float, float, float, float]:  # load (%) / used mem (%) / used mem (Mb) / temp (°C)
+    def stats() -> Tuple[float, float, float, float, int]:  # load (%) / used mem (%) / used mem (Mb) / temp (°C) / FPS
         gpu_to_use = get_hw_and_update(Hardware.HardwareType.GpuAmd)
         if gpu_to_use is None:
             gpu_to_use = get_hw_and_update(Hardware.HardwareType.GpuNvidia)
@@ -188,23 +183,24 @@ class Gpu(sensors.Gpu):
         used_mem = math.nan
         total_mem = math.nan
         temp = math.nan
+        fps = math.nan
 
         for sensor in gpu_to_use.Sensors:
             if sensor.SensorType == Hardware.SensorType.Load and str(sensor.Name).startswith("GPU Core"):
                 load = float(sensor.Value)
             elif sensor.SensorType == Hardware.SensorType.SmallData and str(sensor.Name).startswith("GPU Memory Used"):
                 used_mem = float(sensor.Value)
-            elif sensor.SensorType == Hardware.SensorType.SmallData and str(sensor.Name).startswith(
-                    "D3D Dedicated Memory Used") and math.isnan(used_mem):
-                # Only use D3D memory usage if global "GPU Memory Used" sensor is not available, because it is less
-                # precise and does not cover the entire GPU: https://www.hwinfo.com/forum/threads/what-is-d3d-usage.759/
-                used_mem = float(sensor.Value)
             elif sensor.SensorType == Hardware.SensorType.SmallData and str(sensor.Name).startswith("GPU Memory Total"):
                 total_mem = float(sensor.Value)
-            elif sensor.SensorType == Hardware.SensorType.Temperature and str(sensor.Name).startswith("GPU Core"):
+            elif sensor.SensorType == Hardware.SensorType.Temperature and (str(sensor.Name).startswith("GPU Hot Spot") or str(sensor.Name).startswith("GPU Core")):
                 temp = float(sensor.Value)
+            elif sensor.SensorType == Hardware.SensorType.Factor and str(sensor.Name).startswith("Fullscreen FPS"):
+                fps = int( sensor.Value if sensor.Value > 0 else 0)
 
-        return load, (used_mem / total_mem * 100.0), used_mem, temp
+            if used_mem and sensor.SensorType == Hardware.SensorType.SmallData and str(sensor.Name).endswith("Dedicated Memory Used"):
+                used_mem = float(sensor.Value)
+
+        return load, (used_mem / total_mem * 100.0), used_mem, temp, fps
 
     @staticmethod
     def is_available() -> bool:
@@ -212,8 +208,8 @@ class Gpu(sensors.Gpu):
         found_nvidia = (get_hw_and_update(Hardware.HardwareType.GpuNvidia) is not None)
         found_intel = (get_hw_and_update(Hardware.HardwareType.GpuIntel) is not None)
 
-        if (found_amd and (found_nvidia or found_intel)) or (found_nvidia and found_intel):
-            logger.info(
+        if found_amd and (found_nvidia or found_intel) or (found_nvidia and found_intel):
+            logger.warning(
                 "Found multiple GPUs on your system. Will use dedicated GPU (AMD/Nvidia) for stats if possible.")
 
         return found_amd or found_nvidia or found_intel

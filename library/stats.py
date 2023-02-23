@@ -21,13 +21,11 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import datetime
-import locale
 import math
 import os
 import platform
 import sys
 
-import babel.dates
 from psutil._common import bytes2human
 
 import library.config as config
@@ -245,7 +243,7 @@ class CPU:
             )
 
 
-def display_gpu_stats(load, memory_percentage, memory_used_mb, temperature):
+def display_gpu_stats(load, memory_percentage, memory_used_mb, temperature, fps):
     if config.THEME_DATA['STATS']['GPU']['PERCENTAGE']['GRAPH'].get("SHOW", False):
         if math.isnan(load):
             logger.warning("Your GPU load is not supported yet")
@@ -369,13 +367,47 @@ def display_gpu_stats(load, memory_percentage, memory_used_mb, temperature):
                                                    "BACKGROUND_IMAGE",
                                                    None))
             )
+    
+    if config.THEME_DATA['STATS']['GPU']['FPS']['TEXT'].get("SHOW", False):
+        if math.isnan(fps):
+            logger.warning("Your GPU FPS are not supported yet")
+            config.THEME_DATA['STATS']['GPU']['FPS']['TEXT']['SHOW'] = False
+        else:
+            fps_text = f"{int(fps)}"
+            if config.THEME_DATA['STATS']['GPU']['FPS']['TEXT'].get("SHOW_UNIT", True):
+                fps_text += ""
+
+            xPosition=config.THEME_DATA['STATS']['GPU']['FPS']['TEXT'].get("X", 0)
+            if fps == 0:
+                fps_text = " " + fps_text + "   "  
+                xPosition = xPosition + 20
+            elif fps >= 100:
+                  fps_text = fps_text
+                  xPosition = xPosition + 20
+            else:
+                fps_text = " " + fps_text + "  "               
+                
+            display.lcd.DisplayText(
+                text=fps_text,
+                x=xPosition,
+                y=config.THEME_DATA['STATS']['GPU']['FPS']['TEXT'].get("Y", 0),
+                font=config.THEME_DATA['STATS']['GPU']['FPS']['TEXT'].get("FONT", "roboto-mono/RobotoMono-Regular.ttf"),
+                font_size=config.THEME_DATA['STATS']['GPU']['FPS']['TEXT'].get("FONT_SIZE", 10),
+                font_color=config.THEME_DATA['STATS']['GPU']['FPS']['TEXT'].get("FONT_COLOR", (0, 0, 0)),
+                background_color=config.THEME_DATA['STATS']['GPU']['FPS']['TEXT'].get("BACKGROUND_COLOR",
+                                                                                              (255, 255, 255)),
+                background_image=get_full_path(config.THEME_DATA['PATH'],
+                                               config.THEME_DATA['STATS']['GPU']['FPS']['TEXT'].get(
+                                                   "BACKGROUND_IMAGE",
+                                                   None))
+            )
 
 
 class Gpu:
     @staticmethod
     def stats():
-        load, memory_percentage, memory_used_mb, temperature = sensors.Gpu.stats()
-        display_gpu_stats(load, memory_percentage, memory_used_mb, temperature)
+        load, memory_percentage, memory_used_mb, temperature, fps = sensors.Gpu.stats()
+        display_gpu_stats(load, memory_percentage, memory_used_mb, temperature, fps)
 
     @staticmethod
     def is_available():
@@ -519,7 +551,7 @@ class Disk:
         if config.THEME_DATA['STATS']['DISK']['USED']['TEXT'].get("SHOW", False):
             used_text = f"{int(used / 1000000000):>5}"
             if config.THEME_DATA['STATS']['DISK']['USED']['TEXT'].get("SHOW_UNIT", True):
-                used_text += " G"
+                used_text += " GB"
 
             display.lcd.DisplayText(
                 text=used_text,
@@ -561,7 +593,7 @@ class Disk:
         if config.THEME_DATA['STATS']['DISK']['TOTAL']['TEXT'].get("SHOW", False):
             total_text = f"{int((free + used) / 1000000000):>5}"
             if config.THEME_DATA['STATS']['DISK']['TOTAL']['TEXT'].get("SHOW_UNIT", True):
-                total_text += " G"
+                total_text += " GB"
 
             display.lcd.DisplayText(
                 text=total_text,
@@ -582,7 +614,7 @@ class Disk:
         if config.THEME_DATA['STATS']['DISK']['FREE']['TEXT'].get("SHOW", False):
             free_text = f"{int(free / 1000000000):>5}"
             if config.THEME_DATA['STATS']['DISK']['FREE']['TEXT'].get("SHOW_UNIT", True):
-                free_text += " G"
+                free_text += " GB"
 
             display.lcd.DisplayText(
                 text=free_text,
@@ -758,17 +790,9 @@ class Date:
     @staticmethod
     def stats():
         date_now = datetime.datetime.now()
-
-        if platform.system() == "Windows":
-            # Windows does not have LC_TIME environment variable, use deprecated getdefaultlocale() that returns language code following RFC 1766
-            lc_time = locale.getdefaultlocale()[0]
-        else:
-            lc_time = babel.dates.LC_TIME
-
         if config.THEME_DATA['STATS']['DATE']['DAY']['TEXT'].get("SHOW", False):
-            date_format = config.THEME_DATA['STATS']['DATE']['DAY']['TEXT'].get("FORMAT", 'medium')
             display.lcd.DisplayText(
-                text=f"{babel.dates.format_date(date_now, format=date_format, locale=lc_time)}",
+                text=f"{date_now.strftime('%x')}",
                 x=config.THEME_DATA['STATS']['DATE']['DAY']['TEXT'].get("X", 0),
                 y=config.THEME_DATA['STATS']['DATE']['DAY']['TEXT'].get("Y", 0),
                 font=config.THEME_DATA['STATS']['DATE']['DAY']['TEXT'].get("FONT",
@@ -783,9 +807,8 @@ class Date:
             )
 
         if config.THEME_DATA['STATS']['DATE']['HOUR']['TEXT'].get("SHOW", False):
-            time_format = config.THEME_DATA['STATS']['DATE']['HOUR']['TEXT'].get("FORMAT", 'medium')
             display.lcd.DisplayText(
-                text=f"{babel.dates.format_time(date_now, format=time_format, locale=lc_time)}",
+                text=f"{date_now.strftime('%X')}",
                 x=config.THEME_DATA['STATS']['DATE']['HOUR']['TEXT'].get("X", 0),
                 y=config.THEME_DATA['STATS']['DATE']['HOUR']['TEXT'].get("Y", 0),
                 font=config.THEME_DATA['STATS']['DATE']['HOUR']['TEXT'].get("FONT",
