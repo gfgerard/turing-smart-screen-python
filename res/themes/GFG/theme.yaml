@@ -53,7 +53,7 @@ static_text:
     FONT_COLOR: 16, 223, 239
     #BACKGROUND_IMAGE: background.png
   GPU_TEMP_UNIT:
-    TEXT: "°C"
+    TEXT: ""
     X: 458
     Y: 167
     FONT: generale-mono/GeneraleMonoA.ttf
