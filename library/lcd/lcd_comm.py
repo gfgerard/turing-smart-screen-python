@@ -192,36 +192,36 @@ class LcdComm(ABC):
             self.get_width())
         assert y <= self.get_height(), 'Text Y coordinate ' + str(y) + ' must be <= display height ' + str(
             self.get_height())
-        assert len(text) > 0, 'Text must not be empty'
         assert font_size > 0, "Font size must be > 0"
 
-        if background_image is None:
-            # A text bitmap is created with max width/height by default : text with solid background
-            text_image = Image.new(
-                'RGB',
-                (self.get_width(), self.get_height()),
-                background_color
-            )
-        else:
-            # The text bitmap is created from provided background image : text with transparent background
-            text_image = Image.open(background_image)
+        if(len(text) > 0): 
+            if background_image is None:
+                # A text bitmap is created with max width/height by default : text with solid background
+                text_image = Image.new(
+                    'RGB',
+                    (self.get_width(), self.get_height()),
+                    background_color
+                )
+            else:
+                # The text bitmap is created from provided background image : text with transparent background
+                text_image = Image.open(background_image)
 
-        # Get text bounding box
-        font = ImageFont.truetype("./res/fonts/" + font, font_size)
-        d = ImageDraw.Draw(text_image)
-        left, top, text_width, text_height = d.textbbox((0, 0), text, font=font)
+            # Get text bounding box
+            font = ImageFont.truetype("./res/fonts/" + font, font_size)
+            d = ImageDraw.Draw(text_image)
+            left, top, text_width, text_height = d.textbbox((0, 0), text, font=font)
 
-        # Draw text with specified color & font, remove left/top margins
-        d.text((x - left, y - top), text, font=font, fill=font_color, align=align)
+            # Draw text with specified color & font, remove left/top margins
+            d.text((x - left, y - top), text, font=font, fill=font_color, align=align)
 
-        # Crop text bitmap to keep only the text (also crop if text overflows display)
-        text_image = text_image.crop(box=(
-            x, y,
-            min(x + text_width - left, self.get_width()),
-            min(y + text_height - top, self.get_height())
-        ))
+            # Crop text bitmap to keep only the text (also crop if text overflows display)
+            text_image = text_image.crop(box=(
+                x, y,
+                min(x + text_width - left, self.get_width()),
+                min(y + text_height - top, self.get_height())
+            ))
 
-        self.DisplayPILImage(text_image, x, y)
+            self.DisplayPILImage(text_image, x, y)
 
     def DisplayProgressBar(self, x: int, y: int, width: int, height: int, min_value: int = 0, max_value: int = 100,
                            value: int = 50,

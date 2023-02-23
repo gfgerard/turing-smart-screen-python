@@ -45,13 +45,20 @@ static_text:
     # BACKGROUND_COLOR: 132, 154, 165
     BACKGROUND_IMAGE: background.png
   DISK_USED_LABEL:
-    TEXT: " "
+    TEXT: ""
     X: 510
     Y: 63
     FONT: roboto/Roboto-Regular.ttf
     FONT_SIZE: 14
     FONT_COLOR: 16, 223, 239
-    # BACKGROUND_COLOR: 132, 154, 165
+    #BACKGROUND_IMAGE: background.png
+  GPU_TEMP_UNIT:
+    TEXT: "°C"
+    X: 458
+    Y: 167
+    FONT: generale-mono/GeneraleMonoA.ttf
+    FONT_SIZE: 12
+    FONT_COLOR: 128, 255, 255
     BACKGROUND_IMAGE: background.png
 STATS:
   CPU:
@@ -112,6 +119,7 @@ STATS:
           FONT_SIZE: 13
           FONT_COLOR: 255, 255, 255
           BACKGROUND_COLOR: 50, 50, 50
+          BACKGROUND_IMAGE: background.png
       FIVE:
         TEXT:
           SHOW: False
@@ -122,6 +130,7 @@ STATS:
           FONT_SIZE: 13
           FONT_COLOR: 255, 255, 255
           BACKGROUND_COLOR: 50, 50, 50
+          BACKGROUND_IMAGE: background.png
       FIFTEEN:
         TEXT:
           SHOW: False
@@ -132,6 +141,7 @@ STATS:
           FONT_SIZE: 13
           FONT_COLOR: 255, 255, 255
           BACKGROUND_COLOR: 50, 50, 50
+          BACKGROUND_IMAGE: background.png
     TEMPERATURE:
       INTERVAL: 3
       TEXT:
@@ -334,7 +344,7 @@ STATS:
         FONT_SIZE: 23
         FONT_COLOR: 255, 255, 255
         BACKGROUND_COLOR: 132, 154, 165
-        # BACKGROUND_IMAGE: background.png
+        BACKGROUND_IMAGE: background.png
     TOTAL:
       TEXT:
         SHOW: False
@@ -345,7 +355,7 @@ STATS:
         FONT_SIZE: 23
         FONT_COLOR: 255, 255, 255
         BACKGROUND_COLOR: 132, 154, 165
-        # BACKGROUND_IMAGE: background.png
+        BACKGROUND_IMAGE: background.png
     FREE:
       TEXT:
         SHOW: False
@@ -356,7 +366,7 @@ STATS:
         FONT_SIZE: 23
         FONT_COLOR: 255, 255, 255
         BACKGROUND_COLOR: 132, 154, 165
-        # BACKGROUND_IMAGE: background.png
+        BACKGROUND_IMAGE: background.png
   NET:
     INTERVAL: 1
     WLO:
@@ -369,7 +379,7 @@ STATS:
           FONT_SIZE: 23
           FONT_COLOR: 255, 255, 255
           BACKGROUND_COLOR: 132, 154, 165
-          # BACKGROUND_IMAGE: background.png
+          BACKGROUND_IMAGE: background.png
       UPLOADED:
         TEXT:
           SHOW: FALSE
@@ -379,7 +389,7 @@ STATS:
           FONT_SIZE: 23
           FONT_COLOR: 255, 255, 255
           BACKGROUND_COLOR: 132, 154, 165
-          # BACKGROUND_IMAGE: background.png
+          BACKGROUND_IMAGE: background.png
       DOWNLOAD:
         TEXT:
           SHOW: FALSE
@@ -389,7 +399,7 @@ STATS:
           FONT_SIZE: 23
           FONT_COLOR: 255, 255, 255
           BACKGROUND_COLOR: 132, 154, 165
-          # BACKGROUND_IMAGE: background.png
+          BACKGROUND_IMAGE: background.png
       DOWNLOADED:
         TEXT:
           SHOW: FALSE
@@ -399,7 +409,7 @@ STATS:
           FONT_SIZE: 23
           FONT_COLOR: 255, 255, 255
           BACKGROUND_COLOR: 132, 154, 165
-          # BACKGROUND_IMAGE: background.png
+          BACKGROUND_IMAGE: background.png
     ETH:
       UPLOAD:
         TEXT:
@@ -420,7 +430,7 @@ STATS:
           FONT_SIZE: 23
           FONT_COLOR: 255, 255, 255
           BACKGROUND_COLOR: 132, 154, 165
-          # BACKGROUND_IMAGE: background.png
+          BACKGROUND_IMAGE: background.png
       DOWNLOAD:
         TEXT:
           SHOW: FALSE
@@ -440,7 +450,7 @@ STATS:
           FONT_SIZE: 23
           FONT_COLOR: 255, 255, 255
           BACKGROUND_COLOR: 132, 154, 165
-          # BACKGROUND_IMAGE: background.png
+          BACKGROUND_IMAGE: background.png
   DATE:
     # In seconds. Longer intervals cause this to refresh more slowly.
     # Setting to lower values will display near real time data,
