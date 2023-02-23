@@ -142,3 +142,6 @@ external/LibreHardwareMonitor/LibreHardwareMonitorLib.sys
 
 #temp file
 main.pid
+#bat script local
+turn_off.bat
+turn_off.lnk

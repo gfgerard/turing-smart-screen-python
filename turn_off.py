@@ -24,7 +24,10 @@ def killDisplay():
     #lcd_comm.Clear()
     lcd_comm.ScreenOff()
 
+try:
+    killProcess()
+except:
+    logger.error("Could not kill process")
 
-killProcess()
 time.sleep(1)
 killDisplay()
