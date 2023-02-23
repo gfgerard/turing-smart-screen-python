@@ -368,7 +368,7 @@ def display_gpu_stats(load, memory_percentage, memory_used_mb, temperature, fps)
                                                    None))
             )
     
-    if config.THEME_DATA['STATS']['GPU']['FPS']['TEXT'].get("SHOW", False):
+    if 'FPS' in config.THEME_DATA['STATS']['GPU'] and config.THEME_DATA['STATS']['GPU']['FPS']['TEXT'].get("SHOW", False):
         if math.isnan(fps):
             logger.warning("Your GPU FPS are not supported yet")
             config.THEME_DATA['STATS']['GPU']['FPS']['TEXT']['SHOW'] = False
