@@ -152,6 +152,11 @@ if __name__ == "__main__":
     if platform.system() == "Windows":
         win32api.SetConsoleCtrlHandler(on_win32_ctrl_event, True)
 
+    #save PID for later use in script to send signals
+    f = open("main.pid", "w")
+    f.write(str(os.getpid()))
+    f.close()
+
     # Initialize the display
     display.initialize_display()
 
