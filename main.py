@@ -63,6 +63,8 @@ if __name__ == "__main__":
 
     logger.debug("Using Python %s" % sys.version)
 
+    time.sleep(5);
+
 
     def clean_stop(tray_icon=None):
         # Turn screen and LEDs off before stopping
