@@ -31,6 +31,7 @@ from psutil._common import bytes2human
 import library.config as config
 from library.display import display
 from library.log import logger
+from library.hwinfo_rtss.rtss import get_fps as fps_rtss
 
 ETH_CARD = config.CONFIG_DATA["config"]["ETH"]
 WLO_CARD = config.CONFIG_DATA["config"]["WLO"]
@@ -369,6 +370,7 @@ def display_gpu_stats(load, memory_percentage, memory_used_mb, temperature, fps)
             )
     
     if 'FPS' in config.THEME_DATA['STATS']['GPU'] and config.THEME_DATA['STATS']['GPU']['FPS']['TEXT'].get("SHOW", False):
+        
         if math.isnan(fps):
             logger.warning("Your GPU FPS are not supported yet")
             config.THEME_DATA['STATS']['GPU']['FPS']['TEXT']['SHOW'] = False
@@ -407,6 +409,11 @@ class Gpu:
     @staticmethod
     def stats():
         load, memory_percentage, memory_used_mb, temperature, fps = sensors.Gpu.stats()
+        #print("STATS GRAFICA ", sensors.Gpu.stats())
+                
+        if math.isnan(fps):
+            fps = fps_rtss()
+
         display_gpu_stats(load, memory_percentage, memory_used_mb, temperature, fps)
 
     @staticmethod

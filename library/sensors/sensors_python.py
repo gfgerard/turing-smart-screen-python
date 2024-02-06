@@ -167,7 +167,7 @@ class GpuNvidia(sensors.Gpu):
 
 class GpuAmd(sensors.Gpu):
     @staticmethod
-    def stats() -> Tuple[float, float, float, float, int]:  # load (%) / used mem (%) / used mem (Mb) / temp (°C)
+    def stats() -> Tuple[float, float, float, float, int]:  # load (%) / used mem (%) / used mem (Mb) / temp (°C) / FPS
         fps = 0
         if pyamdgpuinfo:
             # Unlike other sensors, AMD GPU with pyamdgpuinfo pulls in all the stats at once

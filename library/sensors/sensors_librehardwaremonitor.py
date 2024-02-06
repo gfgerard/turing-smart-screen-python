@@ -186,6 +186,8 @@ class Gpu(sensors.Gpu):
         fps = math.nan
 
         for sensor in gpu_to_use.Sensors:
+            #print("SENSOR: ", sensor.Name)
+            #print("SENSOR valor : ", sensor.Value)
             if sensor.SensorType == Hardware.SensorType.Load and str(sensor.Name).startswith("GPU Core"):
                 load = float(sensor.Value)
             elif sensor.SensorType == Hardware.SensorType.SmallData and str(sensor.Name).startswith("GPU Memory Used"):
