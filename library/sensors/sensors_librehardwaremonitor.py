@@ -170,9 +170,9 @@ class Cpu(sensors.Cpu):
 class Gpu(sensors.Gpu):
     @staticmethod
     def stats() -> Tuple[float, float, float, float, int]:  # load (%) / used mem (%) / used mem (Mb) / temp (°C) / FPS
-        gpu_to_use = get_hw_and_update(Hardware.HardwareType.GpuAmd)
+        gpu_to_use = get_hw_and_update(Hardware.HardwareType.GpuNvidia)
         if gpu_to_use is None:
-            gpu_to_use = get_hw_and_update(Hardware.HardwareType.GpuNvidia)
+            gpu_to_use = get_hw_and_update(Hardware.HardwareType.GpuAmd)
         if gpu_to_use is None:
             gpu_to_use = get_hw_and_update(Hardware.HardwareType.GpuIntel)
         if gpu_to_use is None:

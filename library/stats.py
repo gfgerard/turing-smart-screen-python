@@ -346,7 +346,7 @@ def display_gpu_stats(load, memory_percentage, memory_used_mb, temperature, fps)
 
     if config.THEME_DATA['STATS']['GPU']['TEMPERATURE']['TEXT'].get("SHOW", False):
         if math.isnan(temperature):
-            logger.warning("Your GPU temperature is not supported yet")
+            logger.warning("Your GPU temperature is not supported yet ")
             config.THEME_DATA['STATS']['GPU']['TEMPERATURE']['TEXT']['SHOW'] = False
         else:
             temp_text = f"{int(temperature):>3}"

@@ -89,21 +89,21 @@ STATS:
         BAR_OUTLINE: False
         BACKGROUND_COLOR: 0, 0, 0
         # BACKGROUND_IMAGE: background.png
-    FREQUENCY:
+    #FREQUENCY:
       # In seconds. Longer intervals cause this to refresh more slowly.
       # Setting to lower values will display near real time data,
       # but may cause significant CPU usage or the display not to update properly
-      INTERVAL: 1
-      TEXT:
-        SHOW: True
-        SHOW_UNIT: True
-        X: 210
-        Y: 45
-        FONT: generale-mono/GeneraleMonoA.ttf
-        FONT_SIZE: 15
-        FONT_COLOR: 128, 255, 255
+      #INTERVAL: 1
+      #TEXT:
+        #SHOW: True
+        #SHOW_UNIT: True
+        #X: 210
+        #Y: 45
+        #FONT: generale-mono/GeneraleMonoA.ttf
+        #FONT_SIZE: 15
+        #FONT_COLOR: 128, 255, 255
         # BACKGROUND_COLOR: 132, 154, 165
-        BACKGROUND_IMAGE: background.png
+        #BACKGROUND_IMAGE: background.png
     LOAD:
       # In seconds. Longer intervals cause this to refresh more slowly.
       # Setting to lower values will display near real time data,

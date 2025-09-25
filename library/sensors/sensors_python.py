@@ -101,10 +101,10 @@ class Gpu(sensors.Gpu):
     @staticmethod
     def stats() -> Tuple[float, float, float, float, int]:  # load (%) / used mem (%) / used mem (Mb) / temp (°C) / FPS
         global DETECTED_GPU
-        if DETECTED_GPU == GpuType.AMD:
-            return GpuAmd.stats()
-        elif DETECTED_GPU == GpuType.NVIDIA:
+        if DETECTED_GPU == GpuType.NVIDIA:
             return GpuNvidia.stats()
+        elif DETECTED_GPU == GpuType.AMD:
+            return GpuAmd.stats()
         else:
             return math.nan, math.nan, math.nan, math.nan, math.nan
 
